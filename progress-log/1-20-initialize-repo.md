@@ -1,0 +1,1 @@
+For the next 20 days, I'll build a simple project for simulating a data engineering lifecycle. Started simple, defining the first model, and in next days, I'll make a simple experiment in top of these concepts. #DataEngineering #Java #BuildInPublic #LearningJourney
