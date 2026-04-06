@@ -19,8 +19,9 @@ class RandomTransactionGenerator implements DataGenerator<TransactionEvent> {
     int transformedLowerBound = LOWER_BOUND * REAL_VALUE_TRANSFORMER_FACTOR;
     int transformedUpperBound = UPPER_BOUND * REAL_VALUE_TRANSFORMER_FACTOR;
 
-    double randomValue = randomGenerator.nextLong(transformedLowerBound, transformedUpperBound)
-        / REAL_VALUE_TRANSFORMER_FACTOR;
+    double randomValue =
+        Long.valueOf(randomGenerator.nextLong(transformedLowerBound, transformedUpperBound))
+            .doubleValue() / REAL_VALUE_TRANSFORMER_FACTOR;
 
     return new TransactionEvent(UUID.randomUUID(), Instant.now(), BigDecimal.valueOf(randomValue),
         USD, UUID.randomUUID());
