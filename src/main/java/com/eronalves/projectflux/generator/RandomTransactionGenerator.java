@@ -8,13 +8,23 @@ import com.eronalves.projectflux.TransactionEvent;
 
 class RandomTransactionGenerator implements DataGenerator<TransactionEvent> {
 
+  private static final int LOWER_BOUND = 10;
+  private static final int UPPER_BOUND = 500;
+  private static final int REAL_VALUE_TRANSFORMER_FACTOR = 100;
   private static final String USD = "USD";
   private ThreadLocalRandom randomGenerator = ThreadLocalRandom.current();
 
   @Override
   public TransactionEvent generate() {
-    return new TransactionEvent(UUID.randomUUID(), Instant.now(),
-        BigDecimal.valueOf(randomGenerator.nextFloat(10, 500)), USD, UUID.randomUUID());
+    int transformedLowerBound = LOWER_BOUND * REAL_VALUE_TRANSFORMER_FACTOR;
+    int transformedUpperBound = UPPER_BOUND * REAL_VALUE_TRANSFORMER_FACTOR;
+
+    double randomValue =
+        Long.valueOf(randomGenerator.nextLong(transformedLowerBound, transformedUpperBound))
+            .doubleValue() / REAL_VALUE_TRANSFORMER_FACTOR;
+
+    return new TransactionEvent(UUID.randomUUID(), Instant.now(), BigDecimal.valueOf(randomValue),
+        USD, UUID.randomUUID());
   }
 
 

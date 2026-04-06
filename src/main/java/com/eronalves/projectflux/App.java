@@ -1,14 +1,16 @@
 package com.eronalves.projectflux;
 
-import java.util.stream.Stream;
 import com.eronalves.projectflux.generator.DataGenerator;
+import com.eronalves.projectflux.ingestion.IngestionService;
 
 /**
  * Hello world!
  */
 public class App {
+    private static final int BATCH_SIZE = 10;
+
     public static void main(String[] args) {
-        var generator = DataGenerator.randomTransactionEventGenerator();
-        Stream.generate(() -> generator.generate()).limit(5).forEach(IO::println);;
+        new IngestionService(DataGenerator.randomTransactionEventGenerator())
+                .ingestBatch(BATCH_SIZE).forEach(IO::println);
     }
 }
