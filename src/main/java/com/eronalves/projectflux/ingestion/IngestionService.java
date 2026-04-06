@@ -21,6 +21,7 @@ public class IngestionService {
     List<TransactionEvent> list =
         Stream.generate(() -> generator.generate()).limit(batchSize).toList();
     IO.println("Ingested " + batchSize + " events!!");
+    storage.store(list);
     return list;
   }
 }
