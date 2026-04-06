@@ -15,6 +15,7 @@ class InMemoryStorageSink implements StorageSink<TransactionEvent> {
   @Override
   public void store(List<TransactionEvent> items) {
     storage.add(items);
+    IO.println("Stored 1 batch!!");
   }
 
 }

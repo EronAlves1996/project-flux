@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.stream.Stream;
 import com.eronalves.projectflux.TransactionEvent;
 import com.eronalves.projectflux.generator.DataGenerator;
+import com.eronalves.projectflux.storage.StorageSink;
 
 public class IngestionService {
 
   private final DataGenerator<TransactionEvent> generator;
+  private final StorageSink<TransactionEvent> storage;
 
-  public IngestionService(DataGenerator<TransactionEvent> generator) {
+  public IngestionService(DataGenerator<TransactionEvent> generator,
+      StorageSink<TransactionEvent> storage) {
     this.generator = generator;
+    this.storage = storage;
   }
 
   public List<TransactionEvent> ingestBatch(int batchSize) {
