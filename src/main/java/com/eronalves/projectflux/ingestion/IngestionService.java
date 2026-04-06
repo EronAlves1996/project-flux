@@ -7,7 +7,7 @@ import com.eronalves.projectflux.generator.DataGenerator;
 
 public class IngestionService {
 
-  private DataGenerator<TransactionEvent> generator;
+  private final DataGenerator<TransactionEvent> generator;
 
   public IngestionService(DataGenerator<TransactionEvent> generator) {
     this.generator = generator;
