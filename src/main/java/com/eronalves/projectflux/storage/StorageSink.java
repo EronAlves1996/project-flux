@@ -15,4 +15,6 @@ public interface StorageSink<T> {
 
   void store(List<T> items);
 
+  List<List<T>> getAllBatches();
+
 }

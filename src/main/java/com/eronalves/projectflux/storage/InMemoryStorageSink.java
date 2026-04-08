@@ -17,4 +17,9 @@ class InMemoryStorageSink<T> implements StorageSink<T> {
     IO.println("Stored 1 batch!!");
   }
 
+  @Override
+  public List<List<T>> getAllBatches() {
+    return storage;
+  }
+
 }
