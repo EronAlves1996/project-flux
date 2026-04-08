@@ -1,6 +1,6 @@
 package com.eronalves.projectflux.generator;
 
-import com.eronalves.projectflux.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEvent;
 
 public interface DataGenerator<T> {
 
