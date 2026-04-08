@@ -2,7 +2,7 @@ package com.eronalves.projectflux.storage;
 
 import java.util.LinkedList;
 import java.util.List;
-import com.eronalves.projectflux.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEvent;
 
 class InMemoryStorageSink implements StorageSink<TransactionEvent> {
 

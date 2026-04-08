@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import com.eronalves.projectflux.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEvent;
 
 class RandomTransactionGenerator implements DataGenerator<TransactionEvent> {
 

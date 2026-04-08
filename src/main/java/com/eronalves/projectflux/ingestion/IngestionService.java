@@ -2,8 +2,8 @@ package com.eronalves.projectflux.ingestion;
 
 import java.util.List;
 import java.util.stream.Stream;
-import com.eronalves.projectflux.TransactionEvent;
 import com.eronalves.projectflux.generator.DataGenerator;
+import com.eronalves.projectflux.model.TransactionEvent;
 import com.eronalves.projectflux.storage.StorageSink;
 
 public class IngestionService {
