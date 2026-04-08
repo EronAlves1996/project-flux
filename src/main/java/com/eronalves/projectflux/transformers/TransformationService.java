@@ -19,6 +19,7 @@ public class TransformationService {
             event))
         .toList();
     this.silverSink.store(enrichedBatch);
+    IO.println("Stored " + enrichedBatch.size() + " events to Silver");
   }
 
 }
