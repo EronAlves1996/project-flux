@@ -1,7 +1,9 @@
 package com.eronalves.projectflux.serving;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Collectors;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.TransactionCategory;
 import com.eronalves.projectflux.storage.StorageSink;
@@ -15,8 +17,9 @@ public class AnalyticsService {
   }
 
   public Map<TransactionCategory, BigDecimal> getTotalAmountByCategory() {
-
+    return this.silverSink.getAllBatches().stream().flatMap(Collection::stream)
+        .collect(Collectors.groupingBy(EnrichedTransactionEvent::category,
+            Collectors.reducing(null, a -> a.event().amount(), BigDecimal::add)));
   }
-
 
 }
