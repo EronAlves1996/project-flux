@@ -19,7 +19,7 @@ public class AnalyticsService {
   public Map<TransactionCategory, BigDecimal> getTotalAmountByCategory() {
     return this.silverSink.getAllBatches().stream().flatMap(Collection::stream)
         .collect(Collectors.groupingBy(EnrichedTransactionEvent::category,
-            Collectors.reducing(null, a -> a.event().amount(), BigDecimal::add)));
+            Collectors.reducing(BigDecimal.ZERO, a -> a.event().amount(), BigDecimal::add)));
   }
 
 }
