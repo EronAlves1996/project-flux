@@ -5,6 +5,7 @@ import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.serving.AnalyticsService;
 import com.eronalves.projectflux.storage.StorageSink;
 import com.eronalves.projectflux.transformers.TransformationService;
 
@@ -25,5 +26,8 @@ public class App {
         for (List<TransactionEvent> batch : bronzeSink.getAllBatches()) {
             service.transformAndStore(batch);
         }
+
+        var analyticsService = new AnalyticsService(silverSink);
+        analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
     }
 }
