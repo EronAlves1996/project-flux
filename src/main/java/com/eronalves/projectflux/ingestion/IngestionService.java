@@ -24,4 +24,8 @@ public class IngestionService {
     storage.store(list);
     return list;
   }
+
+  public StorageSink<TransactionEvent> getStorage() {
+    return storage;
+  }
 }
