@@ -5,6 +5,7 @@ import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.orchestrator.PipelineOrchestrator;
 import com.eronalves.projectflux.serving.AnalyticsService;
 import com.eronalves.projectflux.storage.StorageSink;
 import com.eronalves.projectflux.transformers.TransformationService;
@@ -17,17 +18,14 @@ public class App {
 
     public static void main(String[] args) {
         StorageSink<TransactionEvent> bronzeSink = StorageSink.inMemory();
-        new IngestionService(DataGenerator.randomTransactionEventGenerator(), bronzeSink)
-                .ingestBatch(BATCH_SIZE);
-
+        IngestionService ingestionService =
+                new IngestionService(DataGenerator.randomTransactionEventGenerator(), bronzeSink);
         StorageSink<EnrichedTransactionEvent> silverSink = StorageSink.inMemoryGenericSink();
-        var service = new TransformationService(silverSink);
-
-        for (List<TransactionEvent> batch : bronzeSink.getAllBatches()) {
-            service.transformAndStore(batch);
-        }
-
+        var transformationService = new TransformationService(silverSink);
         var analyticsService = new AnalyticsService(silverSink);
-        analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
+
+        var orchestrator =
+                new PipelineOrchestrator(analyticsService, transformationService, ingestionService);
+        IO.println(orchestrator.execute(BATCH_SIZE));
     }
 }
