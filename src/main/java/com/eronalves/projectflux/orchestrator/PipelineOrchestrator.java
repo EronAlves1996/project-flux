@@ -28,15 +28,7 @@ public class PipelineOrchestrator {
     UUID runId = UUID.randomUUID();
 
     try {
-
-      ingestionService.ingestBatch(batchSize);
-
-      for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
-        transformationService.transformAndStore(batch);
-        recordsProcessed += batch.size();
-      }
-
-      analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
+      recordsProcessed += runPipeline(batchSize);
     } catch (Exception ex) {
       Instant endTime = Instant.now();
       PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
@@ -45,6 +37,19 @@ public class PipelineOrchestrator {
 
     Instant endTime = Instant.now();
     return new PipelineRun(runId, startTime, endTime, recordsProcessed, PipelineStatus.SUCCESS);
+  }
+
+  private int runPipeline(int batchSize) {
+    ingestionService.ingestBatch(batchSize);
+    int recordsProcessed = 0;
+
+    for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
+      transformationService.transformAndStore(batch);
+      recordsProcessed += batch.size();
+    }
+
+    analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
+    return recordsProcessed;
   }
 
 }
