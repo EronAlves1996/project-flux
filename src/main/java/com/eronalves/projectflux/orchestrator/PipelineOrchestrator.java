@@ -29,7 +29,7 @@ public class PipelineOrchestrator {
 
     PipelineLogger.info(runId.toString(), "Starting processing");
     try {
-      double errored = 1 / 0;
+      recordsProcessed = runPipeline(batchSize);
     } catch (Exception ex) {
       Instant endTime = Instant.now();
       PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
