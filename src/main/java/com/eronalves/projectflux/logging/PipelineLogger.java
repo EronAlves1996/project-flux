@@ -1,5 +1,7 @@
 package com.eronalves.projectflux.logging;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -24,7 +26,9 @@ public class PipelineLogger {
   }
 
   public static void error(String runId, String message, Throwable t, Object... args) {
-    log(ERROR, runId, message, t, args);
+    StringWriter sw = new StringWriter();
+    t.printStackTrace(new PrintWriter(sw));
+    log(ERROR, runId, message, t, sw.toString(), args);
   }
 
 }
