@@ -27,6 +27,7 @@ public class PipelineOrchestrator {
     int recordsProcessed = 0;
     UUID runId = UUID.randomUUID();
 
+    PipelineLogger.info(runId.toString(), "Starting processing");
     try {
       double errored = 1 / 0;
     } catch (Exception ex) {
