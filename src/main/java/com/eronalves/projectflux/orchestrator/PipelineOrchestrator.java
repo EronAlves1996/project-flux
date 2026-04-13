@@ -23,16 +23,23 @@ public class PipelineOrchestrator {
 
   public PipelineRun execute(int batchSize) {
     Instant startTime = Instant.now();
-
-    ingestionService.ingestBatch(batchSize);
-
     int recordsProcessed = 0;
-    for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
-      transformationService.transformAndStore(batch);
-      recordsProcessed += batch.size();
-    }
 
-    analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
+    try {
+
+      ingestionService.ingestBatch(batchSize);
+
+      for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
+        transformationService.transformAndStore(batch);
+        recordsProcessed += batch.size();
+      }
+
+      analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
+    } catch (Exception ex) {
+      Instant endTime = Instant.now();
+      return new PipelineRun(UUID.randomUUID(), startTime, endTime, recordsProcessed,
+          PipelineStatus.FAILED);
+    }
 
     Instant endTime = Instant.now();
 
