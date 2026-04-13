@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import com.eronalves.projectflux.ingestion.IngestionService;
+import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.model.TransactionEvent;
 import com.eronalves.projectflux.serving.AnalyticsService;
 import com.eronalves.projectflux.transformers.TransformationService;
@@ -24,6 +25,7 @@ public class PipelineOrchestrator {
   public PipelineRun execute(int batchSize) {
     Instant startTime = Instant.now();
     int recordsProcessed = 0;
+    UUID runId = UUID.randomUUID();
 
     try {
 
@@ -37,14 +39,12 @@ public class PipelineOrchestrator {
       analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
     } catch (Exception ex) {
       Instant endTime = Instant.now();
-      return new PipelineRun(UUID.randomUUID(), startTime, endTime, recordsProcessed,
-          PipelineStatus.FAILED);
+      PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
+      return new PipelineRun(runId, startTime, endTime, recordsProcessed, PipelineStatus.FAILED);
     }
 
     Instant endTime = Instant.now();
-
-    return new PipelineRun(UUID.randomUUID(), startTime, endTime, recordsProcessed,
-        PipelineStatus.SUCCESS);
+    return new PipelineRun(runId, startTime, endTime, recordsProcessed, PipelineStatus.SUCCESS);
   }
 
 }
