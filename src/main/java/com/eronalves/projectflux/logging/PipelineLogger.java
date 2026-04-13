@@ -28,7 +28,13 @@ public class PipelineLogger {
   public static void error(String runId, String message, Throwable t, Object... args) {
     StringWriter sw = new StringWriter();
     t.printStackTrace(new PrintWriter(sw));
-    log(ERROR, runId, message, t, sw.toString(), args);
+
+    if (args != null && args.length > 0) {
+      log(ERROR, runId, message, t, sw.toString(), args);
+      return;
+    }
+
+    log(ERROR, runId, message, t, sw.toString());
   }
 
 }
