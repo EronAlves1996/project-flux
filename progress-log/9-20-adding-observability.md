@@ -1,0 +1,1 @@
+Observability is a cross cutting concern. We should implement it in our application in a clean way, but not only that. We should ensure that the application logs is adapted to observability tools. Generally using common approachs, like structured logs and agents to connect with sidecars and otel tools to ensure that.
