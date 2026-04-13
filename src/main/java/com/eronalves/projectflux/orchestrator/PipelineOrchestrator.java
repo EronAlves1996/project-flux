@@ -28,7 +28,7 @@ public class PipelineOrchestrator {
     UUID runId = UUID.randomUUID();
 
     try {
-      recordsProcessed += runPipeline(batchSize);
+      double errored = 1 / 0;
     } catch (Exception ex) {
       Instant endTime = Instant.now();
       PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
