@@ -1,0 +1,2 @@
+The best thing to do for operations is to automate them. This happens on the data engineering lifecycle, where we discover what need to be made and then, we serialize these operations into a repeatable pipeline and use some orquestration to run this pipeline from time to time. 
+This facilitates monitoring and maintenance, requiring less people to maintain analytics, dashboards and data operations.
