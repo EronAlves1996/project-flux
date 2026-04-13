@@ -37,7 +37,7 @@ public class PipelineOrchestrator {
     Instant endTime = Instant.now();
 
     return new PipelineRun(UUID.randomUUID(), startTime, endTime, recordsProcessed,
-        PipelineStatus.SUCESS);
+        PipelineStatus.SUCCESS);
   }
 
 }
