@@ -3,6 +3,7 @@ package com.eronalves.projectflux;
 import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
+import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
 import com.eronalves.projectflux.model.TransactionEvent;
 import com.eronalves.projectflux.orchestrator.PipelineOrchestrator;
 import com.eronalves.projectflux.serving.AnalyticsService;
@@ -21,10 +22,12 @@ public class App {
                 new IngestionService(DataGenerator.randomTransactionEventGenerator(), bronzeSink);
         StorageSink<EnrichedTransactionEvent> silverSink = StorageSink.inMemoryGenericSink();
         var transformationService = new TransformationService(silverSink);
-        var analyticsService = new AnalyticsService(silverSink);
 
-        var orchestrator =
-                new PipelineOrchestrator(analyticsService, transformationService, ingestionService);
+        StorageSink<MaskedEnrichedTransactionEvent> goldenSink = StorageSink.inMemoryGenericSink();
+        var analyticsService = new AnalyticsService(goldenSink);
+
+        var orchestrator = new PipelineOrchestrator(ingestionService, transformationService,
+                analyticsService, goldenSink);
         IO.println(orchestrator.execute(BATCH_SIZE));
     }
 }

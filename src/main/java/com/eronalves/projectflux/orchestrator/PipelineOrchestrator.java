@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.UUID;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.logging.PipelineLogger;
+import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
 import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.security.DataMaskingService;
+import com.eronalves.projectflux.security.MaskingStrategy;
 import com.eronalves.projectflux.serving.AnalyticsService;
+import com.eronalves.projectflux.storage.StorageSink;
 import com.eronalves.projectflux.transformers.TransformationService;
 
 public class PipelineOrchestrator {
@@ -14,12 +18,15 @@ public class PipelineOrchestrator {
   private final IngestionService ingestionService;
   private final TransformationService transformationService;
   private final AnalyticsService analyticsService;
+  private final StorageSink<MaskedEnrichedTransactionEvent> goldenSink;
 
-  public PipelineOrchestrator(AnalyticsService analyticsService,
-      TransformationService transformationService, IngestionService ingestionService) {
-    this.analyticsService = analyticsService;
-    this.transformationService = transformationService;
+  public PipelineOrchestrator(IngestionService ingestionService,
+      TransformationService transformationService, AnalyticsService analyticsService,
+      StorageSink<MaskedEnrichedTransactionEvent> goldenSink) {
     this.ingestionService = ingestionService;
+    this.transformationService = transformationService;
+    this.analyticsService = analyticsService;
+    this.goldenSink = goldenSink;
   }
 
   public PipelineRun execute(int batchSize) {
@@ -47,6 +54,11 @@ public class PipelineOrchestrator {
     for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
       transformationService.transformAndStore(batch);
       recordsProcessed += batch.size();
+    }
+
+    for (var batch : transformationService.getSilverSink().getAllBatches()) {
+      goldenSink.store(batch.stream()
+          .map(e -> DataMaskingService.mask(e, MaskingStrategy.HASH_SHA256)).toList());
     }
 
     analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
