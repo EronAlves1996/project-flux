@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
-import com.eronalves.projectflux.model.TransactionCategory;
-import com.eronalves.projectflux.model.UnpersonalizedTransactionEvent;
 
 public class DataMaskingService {
 
