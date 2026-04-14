@@ -50,7 +50,7 @@ public class DataMaskingService {
       byte[] hashedUUID = instance.digest(uuidBuffer.array());
       return new MaskedEnrichedTransactionEvent(HexFormat.of().formatHex(hashedUUID), event);
     } catch (NoSuchAlgorithmException e) {
-      return null;
+      throw new IllegalStateException("Unreachable");
     }
   }
 }
