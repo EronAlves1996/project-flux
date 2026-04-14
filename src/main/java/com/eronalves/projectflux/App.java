@@ -1,6 +1,5 @@
 package com.eronalves.projectflux;
 
-import java.util.List;
 import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
