@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.UUID;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
@@ -47,8 +48,7 @@ public class DataMaskingService {
     try {
       MessageDigest instance = MessageDigest.getInstance(SHA_256);
       byte[] hashedUUID = instance.digest(uuidBuffer.array());
-      return new MaskedEnrichedTransactionEvent(new String(hashedUUID, StandardCharsets.UTF_8),
-          event);
+      return new MaskedEnrichedTransactionEvent(HexFormat.of().formatHex(hashedUUID), event);
     } catch (NoSuchAlgorithmException e) {
       return null;
     }
