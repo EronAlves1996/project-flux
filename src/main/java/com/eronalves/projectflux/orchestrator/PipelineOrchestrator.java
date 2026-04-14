@@ -57,8 +57,13 @@ public class PipelineOrchestrator {
     }
 
     for (var batch : transformationService.getSilverSink().getAllBatches()) {
-      goldenSink.store(batch.stream()
-          .map(e -> DataMaskingService.mask(e, MaskingStrategy.HASH_SHA256)).toList());
+      IO.println("Unmasked values");
+      IO.println(batch);
+      List<MaskedEnrichedTransactionEvent> maskedValues =
+          batch.stream().map(e -> DataMaskingService.mask(e, MaskingStrategy.HASH_SHA256)).toList();
+      goldenSink.store(maskedValues);
+      IO.println("Masked values");
+      IO.println(maskedValues);
     }
 
     analyticsService.getTotalAmountByCategory().entrySet().stream().forEach(IO::println);
