@@ -40,6 +40,7 @@ public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
       if (!INTEGER_PATTERN.matcher(fluxBatchSize).matches()) {
         throw new IllegalStateException(FLUX_BATCH_SIZE + " should be numeric");
       }
+      parsedFluxBatchSize = Integer.valueOf(fluxBatchSize);
     }
 
     MaskingStrategy strategy =
