@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class PipelineLogger {
 
+  private static final String WARN = "WARN";
   private static final String JOINER_DELIMITER = ", ";
   private static final String WHITESPACE = " ";
   private static final String LOG_SECTION_CLOSER_DELIMITER = "] ";
@@ -23,6 +24,10 @@ public class PipelineLogger {
 
   public static void info(String runId, String message, Object... args) {
     log(INFO, runId, message, args);
+  }
+
+  public static void warn(String runId, String message, Object... args) {
+    log(WARN, runId, message, args);
   }
 
   public static void error(String runId, String message, Throwable t, Object... args) {

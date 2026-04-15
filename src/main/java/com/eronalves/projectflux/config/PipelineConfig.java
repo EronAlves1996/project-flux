@@ -2,6 +2,7 @@ package com.eronalves.projectflux.config;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.security.MaskingStrategy;
 
 public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
@@ -16,6 +17,8 @@ public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
       T defaultValue) {
     var variable = System.getenv(environmentVariable);
     if (variable == null || variable.isEmpty()) {
+      PipelineLogger.warn(null, environmentVariable + " not defined, fallbacking to default value ("
+          + defaultValue + ")");
       return defaultValue;
     }
 
@@ -41,6 +44,9 @@ public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
         throw new IllegalStateException(FLUX_BATCH_SIZE + " should be numeric");
       }
       parsedFluxBatchSize = Integer.valueOf(fluxBatchSize);
+    } else {
+      PipelineLogger.warn(null,
+          FLUX_BATCH_SIZE + " not configured, fallbacking to default value (10)");
     }
 
     MaskingStrategy strategy =
