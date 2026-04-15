@@ -22,4 +22,9 @@ public class TransformationService {
     IO.println("Stored " + enrichedBatch.size() + " events to Silver");
   }
 
+  public StorageSink<EnrichedTransactionEvent> getSilverSink() {
+    return silverSink;
+  }
+
+
 }
