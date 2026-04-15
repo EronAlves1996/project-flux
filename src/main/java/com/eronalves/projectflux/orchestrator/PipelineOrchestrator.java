@@ -29,14 +29,14 @@ public class PipelineOrchestrator {
     this.goldenSink = goldenSink;
   }
 
-  public PipelineRun execute(int batchSize) {
+  public PipelineRun execute(int batchSize, MaskingStrategy strategy) {
     Instant startTime = Instant.now();
     int recordsProcessed = 0;
     UUID runId = UUID.randomUUID();
 
     PipelineLogger.info(runId.toString(), "Starting processing");
     try {
-      recordsProcessed = runPipeline(batchSize);
+      recordsProcessed = runPipeline(batchSize, strategy);
     } catch (Exception ex) {
       Instant endTime = Instant.now();
       PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
@@ -47,7 +47,7 @@ public class PipelineOrchestrator {
     return new PipelineRun(runId, startTime, endTime, recordsProcessed, PipelineStatus.SUCCESS);
   }
 
-  private int runPipeline(int batchSize) {
+  private int runPipeline(int batchSize, MaskingStrategy strategy) {
     ingestionService.ingestBatch(batchSize);
     int recordsProcessed = 0;
 
@@ -60,7 +60,7 @@ public class PipelineOrchestrator {
       IO.println("Unmasked values");
       IO.println(batch);
       List<MaskedEnrichedTransactionEvent> maskedValues =
-          batch.stream().map(e -> DataMaskingService.mask(e, MaskingStrategy.HASH_SHA256)).toList();
+          batch.stream().map(e -> DataMaskingService.mask(e, strategy)).toList();
       goldenSink.store(maskedValues);
       IO.println("Masked values");
       IO.println(maskedValues);
