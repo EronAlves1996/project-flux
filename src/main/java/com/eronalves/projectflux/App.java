@@ -1,5 +1,6 @@
 package com.eronalves.projectflux;
 
+import com.eronalves.projectflux.config.PipelineConfig;
 import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
@@ -14,9 +15,10 @@ import com.eronalves.projectflux.transformers.TransformationService;
  * Hello world!
  */
 public class App {
-    private static final int BATCH_SIZE = 10;
 
     public static void main(String[] args) {
+        PipelineConfig environment = PipelineConfig.loadEnvironment();
+
         StorageSink<TransactionEvent> bronzeSink = StorageSink.inMemory();
         IngestionService ingestionService =
                 new IngestionService(DataGenerator.randomTransactionEventGenerator(), bronzeSink);
@@ -28,6 +30,6 @@ public class App {
 
         var orchestrator = new PipelineOrchestrator(ingestionService, transformationService,
                 analyticsService, goldenSink);
-        IO.println(orchestrator.execute(BATCH_SIZE));
+        IO.println(orchestrator.execute(environment.batchSize(), environment.maskingStrategy()));
     }
 }
