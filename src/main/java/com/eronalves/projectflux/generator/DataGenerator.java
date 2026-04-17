@@ -8,6 +8,11 @@ public interface DataGenerator<T> {
     return new RandomTransactionGenerator();
   }
 
+  static DataGenerator<TransactionEvent> corruptedTransactionEventGenerator() {
+    return new CorruptedRandomTransactionGenerator();
+  }
+
+
   T generate();
 
 }
