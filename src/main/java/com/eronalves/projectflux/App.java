@@ -20,8 +20,8 @@ public class App {
         PipelineConfig environment = PipelineConfig.loadEnvironment();
 
         StorageSink<TransactionEvent> bronzeSink = StorageSink.inMemory();
-        IngestionService ingestionService =
-                new IngestionService(DataGenerator.randomTransactionEventGenerator(), bronzeSink);
+        IngestionService ingestionService = new IngestionService(
+                DataGenerator.corruptedTransactionEventGenerator(), bronzeSink);
         StorageSink<EnrichedTransactionEvent> silverSink = StorageSink.inMemoryGenericSink();
         var transformationService = new TransformationService(silverSink);
 
