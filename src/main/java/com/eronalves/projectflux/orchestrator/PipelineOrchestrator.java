@@ -61,8 +61,8 @@ public class PipelineOrchestrator {
     ingestionService.ingestParallel(totalEvents, batchSize);
     var endParallel = System.nanoTime();
 
-    PipelineLogger.info(null, "SEQUENTIAL INGESTION TIME = " + (startSequential - endSequential));
-    PipelineLogger.info(null, "PARALLEL INGESTION TIME = " + (startParallel - endParallel));
+    PipelineLogger.info(null, "SEQUENTIAL INGESTION TIME = " + (endSequential - startSequential));
+    PipelineLogger.info(null, "PARALLEL INGESTION TIME = " + (endParallel - startParallel));
 
     int recordsProcessed = 0;
 
