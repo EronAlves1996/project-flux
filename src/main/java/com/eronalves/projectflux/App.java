@@ -34,6 +34,7 @@ public class App {
 
         var orchestrator = new PipelineOrchestrator(ingestionService, transformationService,
                 analyticsService, goldenSink);
-        IO.println(orchestrator.execute(environment.batchSize(), environment.maskingStrategy()));
+        IO.println(orchestrator.execute(environment.batchSize(), environment.totalEvents(),
+                environment.maskingStrategy()));
     }
 }
