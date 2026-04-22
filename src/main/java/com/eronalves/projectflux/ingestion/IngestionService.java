@@ -45,7 +45,7 @@ public class IngestionService {
 
     List<CompletableFuture<List<TransactionEvent>>> submitedTasks = new ArrayList<>();
 
-    for (int i = 0; i < totalEvents; i++) {
+    for (int i = 0; i < totalEvents; i += batchSize) {
       submitedTasks
           .add(CompletableFuture.supplyAsync(() -> getBatchList(batchSize), executorService));
     }
