@@ -36,5 +36,7 @@ public class App {
                 analyticsService, goldenSink);
         IO.println(orchestrator.execute(environment.batchSize(), environment.totalEvents(),
                 environment.maskingStrategy()));
+
+        EXECUTOR_SERVICE.shutdown();
     }
 }
