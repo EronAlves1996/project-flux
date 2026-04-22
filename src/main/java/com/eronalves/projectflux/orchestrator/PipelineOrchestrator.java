@@ -30,13 +30,17 @@ public class PipelineOrchestrator {
   }
 
   public PipelineRun execute(int batchSize, MaskingStrategy strategy) {
+    return this.execute(batchSize, 10, strategy);
+  }
+
+  public PipelineRun execute(int batchSize, int totalEvents, MaskingStrategy strategy) {
     Instant startTime = Instant.now();
     int recordsProcessed = 0;
     UUID runId = UUID.randomUUID();
 
     PipelineLogger.info(runId.toString(), "Starting processing");
     try {
-      recordsProcessed = runPipeline(batchSize, strategy);
+      recordsProcessed = runPipeline(batchSize, totalEvents, strategy);
     } catch (Exception ex) {
       Instant endTime = Instant.now();
       PipelineLogger.error(runId.toString(), "Error while running pipeline", ex);
@@ -47,8 +51,19 @@ public class PipelineOrchestrator {
     return new PipelineRun(runId, startTime, endTime, recordsProcessed, PipelineStatus.SUCCESS);
   }
 
-  private int runPipeline(int batchSize, MaskingStrategy strategy) {
+  private int runPipeline(int batchSize, int totalEvents, MaskingStrategy strategy) {
+    var startSequential = System.nanoTime();
     ingestionService.ingestBatch(batchSize);
+    var endSequential = System.nanoTime();
+
+
+    var startParallel = System.nanoTime();
+    ingestionService.ingestParallel(totalEvents, batchSize);
+    var endParallel = System.nanoTime();
+
+    PipelineLogger.info(null, "SEQUENTIAL INGESTION TIME = " + (endSequential - startSequential));
+    PipelineLogger.info(null, "PARALLEL INGESTION TIME = " + (endParallel - startParallel));
+
     int recordsProcessed = 0;
 
     for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {

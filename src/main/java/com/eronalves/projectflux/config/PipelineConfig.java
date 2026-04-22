@@ -6,11 +6,17 @@ import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.security.MaskingStrategy;
 
 public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
-    Environment environment) {
+    Environment environment, int totalEvents) {
+
+  public PipelineConfig(int batchSize, MaskingStrategy maskingStrategy, Environment environment) {
+    this(batchSize, maskingStrategy, environment, 10);
+  }
 
   private static final String FLUX_ENV = "FLUX_ENV";
   private static final String FLUX_MASKING_STRATEGY = "FLUX_MASKING_STRATEGY";
   private static final String FLUX_BATCH_SIZE = "FLUX_BATCH_SIZE";
+  private static final String FLUX_TOTAL_EVENTS = "FLUX_TOTAL_EVENTS";
+
   private static final Pattern INTEGER_PATTERN = Pattern.compile("-?\\d+");
 
   private static <T extends Enum<T>> T envEnumValue(String environmentVariable, Class<T> enumClass,
@@ -33,28 +39,33 @@ public record PipelineConfig(int batchSize, MaskingStrategy maskingStrategy,
     return parsedEnumValue;
   }
 
+  private static int envIntValue(String environmentVariable, int defaultValue) {
+    String value = System.getenv(environmentVariable);
+
+    if (value == null || value.isEmpty()) {
+      PipelineLogger.warn(null, environmentVariable
+          + " not configured, fallbacking to default value (" + defaultValue + ")");
+      return defaultValue;
+    }
+
+
+    if (!INTEGER_PATTERN.matcher(value).matches()) {
+      throw new IllegalStateException(environmentVariable + " should be numeric");
+    }
+
+    return Integer.valueOf(value);
+  }
 
   public static PipelineConfig loadEnvironment() {
-    String fluxBatchSize = System.getenv(FLUX_BATCH_SIZE);
-
-    int parsedFluxBatchSize = 10;
-
-    if (fluxBatchSize != null && !fluxBatchSize.isEmpty()) {
-      if (!INTEGER_PATTERN.matcher(fluxBatchSize).matches()) {
-        throw new IllegalStateException(FLUX_BATCH_SIZE + " should be numeric");
-      }
-      parsedFluxBatchSize = Integer.valueOf(fluxBatchSize);
-    } else {
-      PipelineLogger.warn(null,
-          FLUX_BATCH_SIZE + " not configured, fallbacking to default value (10)");
-    }
+    int parsedFluxBatchSize = envIntValue(FLUX_BATCH_SIZE, 10);
+    int parsedFluxTotalEvents = envIntValue(FLUX_TOTAL_EVENTS, 10);
 
     MaskingStrategy strategy =
         envEnumValue(FLUX_MASKING_STRATEGY, MaskingStrategy.class, MaskingStrategy.HASH_SHA256);
 
     Environment env = envEnumValue(FLUX_ENV, Environment.class, Environment.DEV);
 
-    return new PipelineConfig(parsedFluxBatchSize, strategy, env);
+    return new PipelineConfig(parsedFluxBatchSize, strategy, env, parsedFluxTotalEvents);
 
   }
 
