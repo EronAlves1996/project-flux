@@ -7,7 +7,7 @@ import com.eronalves.projectflux.generator.DataGenerator;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
 import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
-import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEventV1;
 import com.eronalves.projectflux.orchestrator.PipelineOrchestrator;
 import com.eronalves.projectflux.serving.AnalyticsService;
 import com.eronalves.projectflux.storage.StorageSink;
@@ -23,7 +23,7 @@ public class App {
     public static void main(String[] args) {
         PipelineConfig environment = PipelineConfig.loadEnvironment();
 
-        StorageSink<TransactionEvent> bronzeSink = StorageSink.inMemory();
+        StorageSink<TransactionEventV1> bronzeSink = StorageSink.inMemory();
         IngestionService ingestionService = new IngestionService(
                 DataGenerator.corruptedTransactionEventGenerator(), bronzeSink, EXECUTOR_SERVICE);
         StorageSink<EnrichedTransactionEvent> silverSink = StorageSink.inMemoryGenericSink();

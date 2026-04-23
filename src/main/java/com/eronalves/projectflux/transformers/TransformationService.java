@@ -3,7 +3,7 @@ package com.eronalves.projectflux.transformers;
 import java.util.List;
 import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.model.EnrichedTransactionEvent;
-import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEventV1;
 import com.eronalves.projectflux.quality.AssertionResult;
 import com.eronalves.projectflux.quality.DataQualityAssertion;
 import com.eronalves.projectflux.quality.NotNullAmountAssertion;
@@ -20,7 +20,7 @@ public class TransformationService {
     this.assertions = List.of(new NotNullAmountAssertion(), new ValidTimestampAssertion());
   }
 
-  public void transformAndStore(List<TransactionEvent> batch) {
+  public void transformAndStore(List<TransactionEventV1> batch) {
     List<EnrichedTransactionEvent> enrichedBatch = batch.stream().map(
         event -> new EnrichedTransactionEvent(TransactionCategorizer.categorize(event.amount()),
             event))

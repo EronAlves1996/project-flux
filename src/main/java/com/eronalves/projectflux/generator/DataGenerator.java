@@ -1,14 +1,14 @@
 package com.eronalves.projectflux.generator;
 
-import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEventV1;
 
 public interface DataGenerator<T> {
 
-  static DataGenerator<TransactionEvent> randomTransactionEventGenerator() {
+  static DataGenerator<TransactionEventV1> randomTransactionEventGenerator() {
     return new RandomTransactionGenerator();
   }
 
-  static DataGenerator<TransactionEvent> corruptedTransactionEventGenerator() {
+  static DataGenerator<TransactionEventV1> corruptedTransactionEventGenerator() {
     return new CorruptedRandomTransactionGenerator();
   }
 
