@@ -1,7 +1,7 @@
 package com.eronalves.projectflux.storage;
 
 import java.util.List;
-import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEventV1;
 
 public interface StorageSink<T> {
 
@@ -9,7 +9,7 @@ public interface StorageSink<T> {
     return new InMemoryStorageSink<>();
   }
 
-  static StorageSink<TransactionEvent> inMemory() {
+  static StorageSink<TransactionEventV1> inMemory() {
     return inMemoryGenericSink();
   }
 

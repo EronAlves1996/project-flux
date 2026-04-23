@@ -6,11 +6,12 @@ import java.util.UUID;
 import com.eronalves.projectflux.ingestion.IngestionService;
 import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.model.MaskedEnrichedTransactionEvent;
-import com.eronalves.projectflux.model.TransactionEvent;
+import com.eronalves.projectflux.model.TransactionEventV1;
 import com.eronalves.projectflux.security.DataMaskingService;
 import com.eronalves.projectflux.security.MaskingStrategy;
 import com.eronalves.projectflux.serving.AnalyticsService;
 import com.eronalves.projectflux.storage.StorageSink;
+import com.eronalves.projectflux.transformers.SchemaMigrationService;
 import com.eronalves.projectflux.transformers.TransformationService;
 
 public class PipelineOrchestrator {
@@ -66,8 +67,11 @@ public class PipelineOrchestrator {
 
     int recordsProcessed = 0;
 
-    for (List<TransactionEvent> batch : ingestionService.getStorage().getAllBatches()) {
+    for (List<TransactionEventV1> batch : ingestionService.getStorage().getAllBatches()) {
       transformationService.transformAndStore(batch);
+      PipelineLogger.info(null, "ORIGINAL EVENTS", batch);
+      PipelineLogger.info(null, "MIGRATED EVENTS",
+          batch.stream().map(b -> SchemaMigrationService.migrate(b, 2)).toList());
       recordsProcessed += batch.size();
     }
 

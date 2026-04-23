@@ -4,26 +4,19 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-public record TransactionEvent(UnpersonalizedTransactionEvent unpersonalizedEvent, UUID userId) {
-                public TransactionEvent(UUID id, Instant timestamp, BigDecimal amount,
-                                                String currency, UUID userId) {
-                                this(new UnpersonalizedTransactionEvent(id, timestamp, amount,
-                                                                currency), userId);
-                }
+public interface TransactionEvent {
 
-                public UUID id() {
-                                return this.unpersonalizedEvent().id();
-                }
 
-                public Instant timestamp() {
-                                return this.unpersonalizedEvent().timestamp();
-                }
+  UUID id();
 
-                public BigDecimal amount() {
-                                return this.unpersonalizedEvent.amount();
-                }
+  UUID userId();
 
-                public String currency() {
-                                return this.unpersonalizedEvent.currency();
-                }
+  Instant timestamp();
+
+  BigDecimal amount();
+
+  String currency();
+
+  int schemaVersion();
 }
+

@@ -5,5 +5,5 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record UnpersonalizedTransactionEvent(UUID id, Instant timestamp, BigDecimal amount,
-    String currency) {
+        String currency) {
 }
