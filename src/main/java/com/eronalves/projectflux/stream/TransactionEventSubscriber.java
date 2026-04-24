@@ -24,6 +24,7 @@ public class TransactionEventSubscriber implements Subscriber<TransactionEventV1
 
   @Override
   public void onNext(TransactionEventV1 item) {
+    PipelineLogger.info(null, "Next item: ", item);
     storage.store(List
         .of(new EnrichedTransactionEvent(TransactionCategorizer.categorize(item.amount()), item)));
   }
