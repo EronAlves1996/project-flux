@@ -2,6 +2,7 @@ package com.eronalves.projectflux.resilience;
 
 import java.time.Duration;
 import java.util.function.Supplier;
+import com.eronalves.projectflux.logging.PipelineLogger;
 import com.eronalves.projectflux.storage.TransientStorageException;
 
 public class RetryUtils {
@@ -12,6 +13,8 @@ public class RetryUtils {
         return operation.get();
       } catch (TransientStorageException ex) {
         try {
+          PipelineLogger.info(null,
+              "Retry " + i + 1 + "/" + maxAttempts + " after " + initialBackoff);
           Thread.sleep(initialBackoff);
         } catch (InterruptedException e) {
           throw new FailedOperationException("Failed to retry", e);
