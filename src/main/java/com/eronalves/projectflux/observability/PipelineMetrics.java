@@ -1,11 +1,9 @@
 package com.eronalves.projectflux.observability;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.eronalves.projectflux.logging.PipelineLogger;
 
 public class PipelineMetrics {
 

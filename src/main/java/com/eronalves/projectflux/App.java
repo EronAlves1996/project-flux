@@ -2,7 +2,6 @@ package com.eronalves.projectflux;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import com.eronalves.projectflux.config.PipelineConfig;
 import com.eronalves.projectflux.generator.DataGenerator;
