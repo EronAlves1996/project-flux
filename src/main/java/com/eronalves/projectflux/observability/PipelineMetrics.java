@@ -27,7 +27,8 @@ public class PipelineMetrics {
 
   public Map<String, Object> snapshot() {
     return Map.of("events_processed", String.valueOf(eventsProcessed), "errors",
-        String.valueOf(errors.size()), "p50_latency", String.valueOf(calculateP50Latency()) + "ns");
+        String.valueOf(errors.size()), "p50_latency", String.valueOf(calculateP50Latency()) + "ns",
+        "error_reasons", String.valueOf(errors));
   }
 
   private long calculateP50Latency() {
